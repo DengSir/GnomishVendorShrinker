@@ -17,6 +17,7 @@ end
 
 function ns.OnLoad()
 	local GVS = ns.NewMainFrame()
+	GVS:Hide()
 	GVS:SetWidth(315)
 	GVS:SetHeight(294)
 	GVS:SetPoint("TOPLEFT", MerchantFrame, 8, -67)

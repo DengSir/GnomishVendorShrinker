@@ -5,6 +5,7 @@ local myname, ns = ...
 
 local RECIPE = GetItemClassInfo(LE_ITEM_CLASS_RECIPE)
 local MISC = GetItemClassInfo(LE_ITEM_CLASS_MISCELLANEOUS)
+local MOUNT = GetItemSubClassInfo(LE_ITEM_CLASS_MISCELLANEOUS, LE_ITEM_MISCELLANEOUS_MOUNT)
 local GARRISON_ICONS = {[1001489] = true, [1001490] = true, [1001491] = true}
 
 
@@ -13,8 +14,8 @@ local function Knowable(link)
 	if not id then return false end
 	if C_Heirloom.IsItemHeirloom(id) then return true end
 
-	local _, _, _, _, _, class, _, _, _, texture = GetItemInfo(link)
-	if class == MISC and select(2, C_ToyBox.GetToyInfo(id)) then return true end
+	local _, _, _, _, _, class, subClass, _, _, texture = GetItemInfo(link)
+	if class == MISC and (subClass == MOUNT or select(2, C_ToyBox.GetToyInfo(id))) then return true end
 	if class == RECIPE or GARRISON_ICONS[texture] then return true end
 end
 

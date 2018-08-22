@@ -28,7 +28,7 @@ local function SetValue(self, i)
 		for j=1,num do items[j]:SetValue(i, j) end
 		self:SizeToFit()
 	else
-		self:SetWidth(0)
+		self:SetWidth(0.01)
 	end
 end
 

@@ -48,10 +48,20 @@ function ns.NewMainFrame()
 		scrollbar:SetMinMaxValues(0, math.max(0, n_searchmatch - NUMROWS))
 		for i=row,NUMROWS do rows[i]:Hide() end
 	end
-	scrollbar:SetScript("OnValueChanged", Refresh)
+
+	local function Update()
+		GVS:SetScript('OnUpdate', nil)
+		Refresh()
+	end
+
+	local function RequestUpdate()
+		GVS:SetScript('OnUpdate', Update)
+	end
+
+	scrollbar:SetScript("OnValueChanged", RequestUpdate)
 
 
-	search:SetScript("OnTextChanged", Refresh)
+	search:SetScript("OnTextChanged", RequestUpdate)
 
 	GVS:EnableMouseWheel(true)
 	GVS:SetScript("OnMouseWheel", function(self, value)
@@ -61,7 +71,7 @@ function ns.NewMainFrame()
 			scrollbar:Increment()
 		end
 	end)
-	GVS:SetScript("OnEvent", Refresh)
+	GVS:SetScript("OnEvent", RequestUpdate)
 	GVS:SetScript("OnShow", function(self)
 		local max = math.max(0, GetMerchantNumItems() - NUMROWS)
 		scrollbar:SetMinMaxValues(0, max)
