@@ -32,7 +32,7 @@ end
 
 
 local function Sound()
-	PlaySound("UChatScrollButton")
+	PlaySound(SOUNDKIT.U_CHAT_SCROLL_BUTTON)
 end
 
 
