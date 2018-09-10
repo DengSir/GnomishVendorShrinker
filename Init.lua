@@ -31,7 +31,9 @@ function ns.OnLoad()
 
 	-- Force show when we're loaded on demand and the tab is already selected
 	if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then
-		GVS:Show()
+		C_Timer.After(0, function()
+			GVS:Show()
+		end)
 	end
 
 	-- Reparent the first 10 MerchantItem frames, so they only appear for buyback
