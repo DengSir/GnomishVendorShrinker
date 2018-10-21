@@ -30,11 +30,11 @@ function ns.OnLoad()
 	hooksecurefunc("SetMerchantFilter", function() GVS:GetScript("OnShow")(GVS) end)
 
 	-- Force show when we're loaded on demand and the tab is already selected
-	if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then
+	-- if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then
 		C_Timer.After(0, function()
 			GVS:Show()
 		end)
-	end
+	-- end
 
 	-- Reparent the first 10 MerchantItem frames, so they only appear for buyback
 	for i=1,10 do _G["MerchantItem"..i]:SetParent(MerchantItem11) end
