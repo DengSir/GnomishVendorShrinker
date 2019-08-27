@@ -3,7 +3,7 @@ local myname, ns = ...
 
 
 local function HasHeirloom(id)
-	return C_Heirloom.IsItemHeirloom(id) and C_Heirloom.PlayerHasHeirloom(id)
+	return C_Heirloom and C_Heirloom.IsItemHeirloom(id) and C_Heirloom.PlayerHasHeirloom(id)
 end
 
 
