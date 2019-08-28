@@ -12,7 +12,7 @@ local GARRISON_ICONS = {[1001489] = true, [1001490] = true, [1001491] = true}
 local function Knowable(link)
 	local id = ns.ids[link]
 	if not id then return false end
-	if C_Heirloom.IsItemHeirloom(id) then return true end
+	if C_Heirloom and C_Heirloom.IsItemHeirloom(id) then return true end
 
 	local _, _, _, _, _, class, subClass, _, _, texture = GetItemInfo(link)
 	if class == MISC and (subClass == MOUNT or select(2, C_ToyBox.GetToyInfo(id))) then return true end

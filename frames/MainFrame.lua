@@ -80,9 +80,11 @@ function ns.NewMainFrame()
 
 		GVS:RegisterEvent("BAG_UPDATE")
 		GVS:RegisterEvent("MERCHANT_UPDATE")
-		GVS:RegisterEvent('MERCHANT_SHOW')
+		GVS:RegisterEvent("MERCHANT_SHOW")
 		GVS:RegisterEvent('MERCHANT_FILTER_ITEM_UPDATE')
-		GVS:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+		pcall(function()
+			GVS:RegisterEvent("CURRENCY_DISPLAY_UPDATE")
+		end)
 	end)
 	GVS:SetScript("OnHide", GVS.UnregisterAllEvents)
 
