@@ -14,7 +14,7 @@ local function Knowable(link)
 	if C_Heirloom and C_Heirloom.IsItemHeirloom(id) then return true end
 
 	local _, _, _, _, _, class, _, _, _, texture = GetItemInfo(link)
-	if class == MISC and select(2, C_ToyBox.GetToyInfo(id)) then return true end
+	if class == MISC and C_ToyBox and select(2, C_ToyBox.GetToyInfo(id)) then return true end
 	if class == RECIPE or GARRISON_ICONS[texture] then return true end
 end
 
