@@ -4,7 +4,7 @@ local myname, ns = ...
 
 function ns.NewSearchField(parent)
   local editbox = ns.NewTextInput(parent)
-  editbox:SetPoint("BOTTOMLEFT", parent, "TOPLEFT", 55, 9)
+  editbox:SetPoint("BOTTOMRIGHT", parent, "TOPRIGHT", -5, 9)
 
   editbox.placeholder:SetText("Search...")
 

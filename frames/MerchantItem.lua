@@ -109,6 +109,12 @@ local function BuyItem(self, fullstack)
 
 	local _, _, _, vendorStackSize = GetMerchantItemInfo(id)
 	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
+	if fullstack and itemStackSize then
+		local count = GetItemCount(link)
+		local sporadic = count % itemStackSize
+
+		itemStackSize = itemStackSize - sporadic
+	end
 	ns.Purchase(id, fullstack and itemStackSize or vendorStackSize or 1)
 end
 
