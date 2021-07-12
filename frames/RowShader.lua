@@ -47,7 +47,7 @@ function ns.GetRowGradient(index)
 	local gradient = DEFAULT_GRAD
 	local shown = false
 
-	local _, _, _, _, _, isUsable = GetMerchantItemInfo(index)
+	local _, _, _, _, _, _, isUsable = GetMerchantItemInfo(index)
 	if not isUsable then
 		gradient = GRADS.red
 		shown = true
@@ -90,7 +90,7 @@ end
 
 
 function ns.GetRowVertexColor(index)
-	local _, _, _, _, _, isUsable = GetMerchantItemInfo(index)
+	local _, _, _, _, _, _, isUsable = GetMerchantItemInfo(index)
 	if isUsable then return 1.0, 1.0, 1.0
 	else             return 0.9, 0.0, 0.0
 	end

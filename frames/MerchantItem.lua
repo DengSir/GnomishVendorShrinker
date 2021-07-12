@@ -28,6 +28,7 @@ end
 
 
 local function IsHeirloom(index)
+	if not C_Heirloom then return end
 	local id = GetMerchantItemID(index)
 	return id and C_Heirloom.IsItemHeirloom(id)
 end
@@ -123,7 +124,7 @@ local function SetValue(self, i)
 	self:SetID(i)
 	self:Show()
 
-	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
+	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isPurchasable, isUsable, extendedCost = GetMerchantItemInfo(i)
 	local link = GetMerchantItemLink(i)
 
 	local gradient, shown = ns.GetRowGradient(i)

@@ -100,7 +100,7 @@ function ns.NewScrollBar(parent, offset, step)
 	f:HookScript("OnMinMaxChanged", UpdateUpDown)
 	f:HookScript("OnValueChanged", UpdateUpDown)
 
-	local border = CreateFrame("Frame", nil, f)
+	local border = CreateFrame("Frame", nil, f, BackdropTemplateMixin and 'BackdropTemplate' or nil)
 	border:SetPoint("TOPLEFT", up, -5, 5)
 	border:SetPoint("BOTTOMRIGHT", down, 5, -3)
 	border:SetBackdrop(BACKDROP)
