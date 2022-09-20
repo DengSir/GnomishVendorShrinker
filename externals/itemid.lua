@@ -16,3 +16,19 @@ ns.ids = setmetatable({}, {
         return id
     end,
 })
+
+ns.currencyIds = setmetatable({}, {
+    __index = function(t, i)
+        if type(i) == 'number' then
+            t[i] = i
+            return i
+        elseif type(i) ~= 'string' then
+            t[i] = false
+            return
+        end
+
+        local id = tonumber(i:match("currency:(%d+)"))
+        t[i] = id
+        return id
+    end
+})

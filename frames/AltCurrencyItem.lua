@@ -15,14 +15,16 @@ local function OnLeave()
 end
 
 local function GetCurencyCount(item)
-    if GetCurrencyListSize then
-        for i = 1, GetCurrencyListSize() do
-            local name, _, _, _, _, count = GetCurrencyListInfo(i)
-            if item == name then return count end
+    if type(item) == 'string' then item = ns.currencyIds[item] end
+    if not item then
+        if item == ARENA_POINTS then
+            item = Constants.CurrencyConsts.CLASSIC_ARENA_POINTS_CURRENCY_ID
+        elseif item == CHAT_MSG_COMBAT_HONOR_GAIN then
+            item = Constants.CurrencyConsts.CLASSIC_HONOR_CURRENCY_ID
         end
-    else
-        return 0
     end
+    if not item then return 0 end
+    return C_CurrencyInfo.GetCurrencyInfo(item).quantity
 end
 
 local function GetQtyOwned(item)
@@ -41,8 +43,15 @@ local function SetValue(self, i, j)
     indexes[self], ids[self] = i, j
 
     local texture, price, link, name = GetMerchantItemCostItem(i, j)
+    if link == '' then link = nil end
     icons[self]:SetTexture(texture)
     texts[self]:SetText(GetTextColor(price, (link or name)) .. price)
+
+    if ns.currencyIds[link or name] == Constants.CurrencyConsts.CLASSIC_HONOR_CURRENCY_ID then
+        icons[self]:SetTexCoord(0.03125, 0.59375, 0.03125, 0.59375)
+    else
+        icons[self]:SetTexCoord(0, 1, 0, 1)
+    end
 
     self:Show()
 end
