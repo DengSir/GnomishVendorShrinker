@@ -25,7 +25,7 @@ function ns.NewMainFrame()
         rows[i] = row
     end
 
-    local scrollbar = ns.NewScrollBar(GVS, 0, 5)
+    local scrollbar = ns.NewScrollBar(GVS, -5, 5)
     local function Refresh()
         local offset = scrollbar:GetValue()
         local searchstring = search:GetText()
@@ -46,7 +46,7 @@ function ns.NewMainFrame()
             rows[i]:Hide()
         end
     end
-    scrollbar:SetScript('OnValueChanged', Refresh)
+    scrollbar:HookScript('OnValueChanged', Refresh)
 
     search:SetScript('OnTextChanged', Refresh)
 
