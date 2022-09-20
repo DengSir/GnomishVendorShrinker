@@ -90,7 +90,6 @@ function ns.NewScrollBar(parent, offset, step)
     local function UpdateUpDown(self)
         local min, max = self:GetMinMaxValues()
         local value = self:GetValue()
-        print(min, max, value)
         if value == min then
             up:Disable()
         else
