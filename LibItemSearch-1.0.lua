@@ -26,12 +26,18 @@ local ItemSearch = ns.LibItemSearch
 --[[ general search ]] --
 
 function ItemSearch:Find(itemLink, search)
-    if not search or search == "" then return true end
+    if not search or search == '' then
+        return true
+    end
 
-    if not itemLink then return false end
+    if not itemLink then
+        return false
+    end
 
     local search = search:lower()
-    if search:match('\124') then return self:FindUnionSearch(itemLink, strsplit('\124', search)) end
+    if search:match('\124') then
+        return self:FindUnionSearch(itemLink, strsplit('\124', search))
+    end
     return self:FindUnionSearch(itemLink, search)
 end
 
@@ -42,9 +48,13 @@ function ItemSearch:FindUnionSearch(itemLink, ...)
         local search = select(i, ...)
         if search and search ~= '' then
             if search:match('\038') then
-                if self:FindIntersectSearch(itemLink, strsplit('\038', search)) then return true end
+                if self:FindIntersectSearch(itemLink, strsplit('\038', search)) then
+                    return true
+                end
             else
-                if self:FindIntersectSearch(itemLink, search) then return true end
+                if self:FindIntersectSearch(itemLink, search) then
+                    return true
+                end
             end
         end
     end
@@ -56,7 +66,11 @@ end
 function ItemSearch:FindIntersectSearch(itemLink, ...)
     for i = 1, select('#', ...) do
         local search = select(i, ...)
-        if search and search ~= '' then if not self:FindNegatableSearch(itemLink, search) then return false end end
+        if search and search ~= '' then
+            if not self:FindNegatableSearch(itemLink, search) then
+                return false
+            end
+        end
     end
     return true
 end
@@ -65,7 +79,9 @@ end
 
 function ItemSearch:FindNegatableSearch(itemLink, search)
     local negatedSearch = search:match('^\033(.+)$')
-    if negatedSearch then return not self:FindTypedSearch(itemLink, negatedSearch) end
+    if negatedSearch then
+        return not self:FindTypedSearch(itemLink, negatedSearch)
+    end
     return self:FindTypedSearch(itemLink, search)
 end
 
@@ -88,18 +104,28 @@ end
 --]]
 
 local typedSearches = {}
-function ItemSearch:RegisterTypedSearch(typedSearchObj) typedSearches[typedSearchObj.id] = typedSearchObj end
+function ItemSearch:RegisterTypedSearch(typedSearchObj)
+    typedSearches[typedSearchObj.id] = typedSearchObj
+end
 
-function ItemSearch:GetTypedSearches() return pairs(typedSearches) end
+function ItemSearch:GetTypedSearches()
+    return pairs(typedSearches)
+end
 
-function ItemSearch:GetTypedSearch(id) return typedSearches[id] end
+function ItemSearch:GetTypedSearch(id)
+    return typedSearches[id]
+end
 
 function ItemSearch:FindTypedSearch(itemLink, search)
-    if not search then return false end
+    if not search then
+        return false
+    end
 
     for id, searchInfo in self:GetTypedSearches() do
         local capture1, capture2, capture3 = searchInfo:isSearch(search)
-        if capture1 then return searchInfo:findItem(itemLink, capture1, capture2, capture3) end
+        if capture1 then
+            return searchInfo:findItem(itemLink, capture1, capture2, capture3)
+        end
     end
 
     return self:GetTypedSearch('itemTypeGeneric'):findItem(itemLink, search) or
@@ -112,12 +138,24 @@ end
 
 function ItemSearch:Compare(op, lhs, rhs)
     -- ugly, but it works
-    if op == ':' or op == '=' or op == '==' then return lhs == rhs end
-    if op == '!=' or op == '~=' then return lhs ~= rhs end
-    if op == '<=' then return lhs <= rhs end
-    if op == '<' then return lhs < rhs end
-    if op == '>' then return lhs > rhs end
-    if op == '>=' then return lhs >= rhs end
+    if op == ':' or op == '=' or op == '==' then
+        return lhs == rhs
+    end
+    if op == '!=' or op == '~=' then
+        return lhs ~= rhs
+    end
+    if op == '<=' then
+        return lhs <= rhs
+    end
+    if op == '<' then
+        return lhs < rhs
+    end
+    if op == '>' then
+        return lhs > rhs
+    end
+    if op == '>=' then
+        return lhs >= rhs
+    end
     return false
 end
 
@@ -127,7 +165,9 @@ local function search_IsInText(search, ...)
     for i = 1, select('#', ...) do
         local text = select(i, ...)
         text = text and tostring(text):lower()
-        if text and (text == search or text:match(search)) then return true end
+        if text and (text == search or text:match(search)) then
+            return true
+        end
     end
     return false
 end
@@ -135,7 +175,9 @@ end
 ItemSearch:RegisterTypedSearch{
     id = 'itemName',
 
-    isSearch = function(self, search) return search and search:match('^n:(.+)$') end,
+    isSearch = function(self, search)
+        return search and search:match('^n:(.+)$')
+    end,
 
     findItem = function(self, itemLink, search)
         local itemName = (GetItemInfo(itemLink))
@@ -148,11 +190,15 @@ ItemSearch:RegisterTypedSearch{
 ItemSearch:RegisterTypedSearch{
     id = 'itemTypeGeneric',
 
-    isSearch = function(self, search) return search and search:match('^t:(.+)$') end,
+    isSearch = function(self, search)
+        return search and search:match('^t:(.+)$')
+    end,
 
     findItem = function(self, itemLink, search)
         local name, link, quality, iLevel, reqLevel, type, subType, maxStack, equipSlot = GetItemInfo(itemLink)
-        if not name then return false end
+        if not name then
+            return false
+        end
         return search_IsInText(search, type, subType, _G[equipSlot])
     end,
 }
@@ -162,7 +208,11 @@ ItemSearch:RegisterTypedSearch{
 ItemSearch:RegisterTypedSearch{
     id = 'itemQuality',
 
-    isSearch = function(self, search) if search then return search:match('^q([%~%:%<%>%=%!]+)(%w+)$') end end,
+    isSearch = function(self, search)
+        if search then
+            return search:match('^q([%~%:%<%>%=%!]+)(%w+)$')
+        end
+    end,
 
     descToQuality = function(self, desc)
         local q = 0
@@ -173,12 +223,16 @@ ItemSearch:RegisterTypedSearch{
             quality = _G['ITEM_QUALITY' .. q .. '_DESC']
         end
 
-        if quality then return q end
+        if quality then
+            return q
+        end
     end,
 
     findItem = function(self, itemLink, op, search)
         local name, link, quality = GetItemInfo(itemLink)
-        if not name then return false end
+        if not name then
+            return false
+        end
 
         local num = tonumber(search) or self:descToQuality(search)
         return num and ItemSearch:Compare(op, quality, num) or false
@@ -190,11 +244,17 @@ ItemSearch:RegisterTypedSearch{
 ItemSearch:RegisterTypedSearch{
     id = 'itemLevel',
 
-    isSearch = function(self, search) if search then return search:match('^ilvl([:<>=!]+)(%d+)$') end end,
+    isSearch = function(self, search)
+        if search then
+            return search:match('^ilvl([:<>=!]+)(%d+)$')
+        end
+    end,
 
     findItem = function(self, itemLink, op, search)
         local name, link, quality, iLvl = GetItemInfo(itemLink)
-        if not iLvl then return false end
+        if not iLvl then
+            return false
+        end
 
         local num = tonumber(search)
         return num and ItemSearch:Compare(op, iLvl, num) or false
@@ -217,7 +277,9 @@ local function link_FindSearchInTooltip(itemLink, search)
     -- look in the cache for the result
     local itemID = itemLink:match('item:(%d+)')
     local cachedResult = tooltipCache[search][itemID]
-    if cachedResult ~= nil then return cachedResult end
+    if cachedResult ~= nil then
+        return cachedResult
+    end
 
     -- no match?, pull in the resut from tooltip parsing
     tooltipScanner:SetOwner(UIParent, 'ANCHOR_NONE')
@@ -238,9 +300,13 @@ end
 ItemSearch:RegisterTypedSearch{
     id = 'tooltip',
 
-    isSearch = function(self, search) return self.keywords[search] end,
+    isSearch = function(self, search)
+        return self.keywords[search]
+    end,
 
-    findItem = function(self, itemLink, search) return search and link_FindSearchInTooltip(itemLink, search) end,
+    findItem = function(self, itemLink, search)
+        return search and link_FindSearchInTooltip(itemLink, search)
+    end,
 
     keywords = {
         ['boe'] = ITEM_BIND_ON_EQUIP,
@@ -254,7 +320,9 @@ ItemSearch:RegisterTypedSearch{
 ItemSearch:RegisterTypedSearch{
     id = 'tooltipDesc',
 
-    isSearch = function(self, search) return search and search:match('^tt:(.+)$') end,
+    isSearch = function(self, search)
+        return search and search:match('^tt:(.+)$')
+    end,
 
     findItem = function(self, itemLink, search)
         -- no match?, pull in the resut from tooltip parsing
@@ -291,9 +359,13 @@ local function findEquipmentSetByName(search)
         local setName = (GetEquipmentSetInfo(i))
         local lSetName = setName:lower()
 
-        if lSetName == search then return setName end
+        if lSetName == search then
+            return setName
+        end
 
-        if lSetName:match(startsWithSearch) then partialMatch = setName end
+        if lSetName:match(startsWithSearch) then
+            partialMatch = setName
+        end
     end
 
     -- Wardrobe Support
@@ -302,9 +374,13 @@ local function findEquipmentSetByName(search)
             local setName = outfit.OutfitName
             local lSetName = setName:lower()
 
-            if lSetName == search then return setName end
+            if lSetName == search then
+                return setName
+            end
 
-            if lSetName:match(startsWithSearch) then partialMatch = setName end
+            if lSetName:match(startsWithSearch) then
+                partialMatch = setName
+            end
         end
     end
 
@@ -312,25 +388,37 @@ local function findEquipmentSetByName(search)
 end
 
 local function isItemInEquipmentSet(itemLink, setName)
-    if not setName then return false end
+    if not setName then
+        return false
+    end
 
     local itemIDs = GetEquipmentSetItemIDs(setName)
-    if not itemIDs then return false end
+    if not itemIDs then
+        return false
+    end
 
     local itemID = tonumber(itemLink:match('item:(%d+)'))
-    for inventoryID, setItemID in pairs(itemIDs) do if itemID == setItemID then return true end end
+    for inventoryID, setItemID in pairs(itemIDs) do
+        if itemID == setItemID then
+            return true
+        end
+    end
 
     return false
 end
 
 local function isItemInWardrobeSet(itemLink, setName)
-    if not Wardrobe then return false end
+    if not Wardrobe then
+        return false
+    end
 
     local itemName = (GetItemInfo(itemLink))
     for i, outfit in ipairs(Wardrobe.CurrentConfig.Outfit) do
         if outfit.OutfitName == setName then
             for j, item in pairs(outfit.Item) do
-                if item and (item.IsSlotUsed == 1) and (item.Name == itemName) then return true end
+                if item and (item.IsSlotUsed == 1) and (item.Name == itemName) then
+                    return true
+                end
             end
         end
     end
@@ -341,11 +429,15 @@ end
 ItemSearch:RegisterTypedSearch{
     id = 'equipmentSet',
 
-    isSearch = function(self, search) return search and search:match('^s:(.+)$') end,
+    isSearch = function(self, search)
+        return search and search:match('^s:(.+)$')
+    end,
 
     findItem = function(self, itemLink, search)
         local setName = findEquipmentSetByName(search)
-        if not setName then return false end
+        if not setName then
+            return false
+        end
 
         return isItemInEquipmentSet(itemLink, setName) or isItemInWardrobeSet(itemLink, setName)
     end,

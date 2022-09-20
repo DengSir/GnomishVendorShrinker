@@ -8,9 +8,11 @@ local myname, ns = ...
 -- All children with this helper will be resized if they are currently shown.
 
 local function ResizeChildren(...)
-    for i = 1, select("#", ...) do
+    for i = 1, select('#', ...) do
         local child = select(i, ...)
-        if child.SizeToFit and child:IsShown() then child:SizeToFit() end
+        if child.SizeToFit and child:IsShown() then
+            child:SizeToFit()
+        end
     end
 end
 

@@ -5,7 +5,7 @@ local icons, texts = {}, {}
 local indexes, ids = {}, {}
 
 local function OnEnter(self)
-    GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+    GameTooltip:SetOwner(self, 'ANCHOR_RIGHT')
     GameTooltip:SetMerchantCostItem(indexes[self], ids[self])
 end
 
@@ -15,7 +15,9 @@ local function OnLeave()
 end
 
 local function GetCurencyCount(item)
-    if type(item) == 'string' then item = ns.currencyIds[item] end
+    if type(item) == 'string' then
+        item = ns.currencyIds[item]
+    end
     if not item then
         if item == ARENA_POINTS then
             item = Constants.CurrencyConsts.CLASSIC_ARENA_POINTS_CURRENCY_ID
@@ -23,27 +25,35 @@ local function GetCurencyCount(item)
             item = Constants.CurrencyConsts.CLASSIC_HONOR_CURRENCY_ID
         end
     end
-    if not item then return 0 end
+    if not item then
+        return 0
+    end
     return C_CurrencyInfo.GetCurrencyInfo(item).quantity
 end
 
 local function GetQtyOwned(item)
     local id = ns.ids[item]
-    if id then return GetItemCount(id, true) or 0 end
+    if id then
+        return GetItemCount(id, true) or 0
+    end
 
     return GetCurencyCount(item) or 0
 end
 
 local function GetTextColor(price, link)
-    if link and (GetQtyOwned(link) < price) then return "|cffff9999" end
-    return ""
+    if link and (GetQtyOwned(link) < price) then
+        return '|cffff9999'
+    end
+    return ''
 end
 
 local function SetValue(self, i, j)
     indexes[self], ids[self] = i, j
 
     local texture, price, link, name = GetMerchantItemCostItem(i, j)
-    if link == '' then link = nil end
+    if link == '' then
+        link = nil
+    end
     icons[self]:SetTexture(texture)
     texts[self]:SetText(GetTextColor(price, (link or name)) .. price)
 
@@ -57,24 +67,24 @@ local function SetValue(self, i, j)
 end
 
 function ns.NewAltCurrencyItemFrame(parent)
-    local frame = CreateFrame("Frame", nil, parent)
+    local frame = CreateFrame('Frame', nil, parent)
     frame:SetSize(ICONSIZE, ICONSIZE)
 
-    local text = frame:CreateFontString(nil, nil, "NumberFontNormalSmall")
-    text:SetPoint("LEFT")
+    local text = frame:CreateFontString(nil, nil, 'NumberFontNormalSmall')
+    text:SetPoint('LEFT')
     texts[frame] = text
 
     local icon = frame:CreateTexture()
     icon:SetSize(ICONSIZE, ICONSIZE)
-    icon:SetPoint("LEFT", text, "RIGHT", PADDING, 0)
+    icon:SetPoint('LEFT', text, 'RIGHT', PADDING, 0)
     icons[frame] = icon
 
     frame.SetValue = SetValue
     frame.SizeToFit = ns.SizeToFit
 
     frame:EnableMouse(true)
-    frame:SetScript("OnEnter", OnEnter)
-    frame:SetScript("OnLeave", OnLeave)
+    frame:SetScript('OnEnter', OnEnter)
+    frame:SetScript('OnLeave', OnLeave)
 
     return frame
 end

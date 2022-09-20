@@ -6,7 +6,7 @@ ns.LibItemSearch = nil
 local NUMROWS = 14
 
 function ns.NewMainFrame()
-    local GVS = CreateFrame("frame", nil, MerchantBuyBackItem)
+    local GVS = CreateFrame('frame', nil, MerchantBuyBackItem)
 
     local search = ns.NewSearchField(GVS)
 
@@ -15,11 +15,11 @@ function ns.NewMainFrame()
         local row = ns.NewMerchantItemFrame(GVS)
 
         if i == 1 then
-            row:SetPoint("TOPLEFT")
-            row:SetPoint("RIGHT", -19, 0)
+            row:SetPoint('TOPLEFT')
+            row:SetPoint('RIGHT', -19, 0)
         else
-            row:SetPoint("TOPLEFT", rows[i - 1], "BOTTOMLEFT")
-            row:SetPoint("RIGHT", rows[i - 1])
+            row:SetPoint('TOPLEFT', rows[i - 1], 'BOTTOMLEFT')
+            row:SetPoint('RIGHT', rows[i - 1])
         end
 
         rows[i] = row
@@ -42,33 +42,37 @@ function ns.NewMainFrame()
             end
         end
         scrollbar:SetMinMaxValues(0, math.max(0, n_searchmatch - NUMROWS))
-        for i = row, NUMROWS do rows[i]:Hide() end
+        for i = row, NUMROWS do
+            rows[i]:Hide()
+        end
     end
-    scrollbar:SetScript("OnValueChanged", Refresh)
+    scrollbar:SetScript('OnValueChanged', Refresh)
 
-    search:SetScript("OnTextChanged", Refresh)
+    search:SetScript('OnTextChanged', Refresh)
 
     GVS:EnableMouseWheel(true)
-    GVS:SetScript("OnMouseWheel", function(self, value)
+    GVS:SetScript('OnMouseWheel', function(self, value)
         if value > 0 then
             scrollbar:Decrement()
         else
             scrollbar:Increment()
         end
     end)
-    GVS:SetScript("OnEvent", Refresh)
-    GVS:SetScript("OnShow", function(self)
+    GVS:SetScript('OnEvent', Refresh)
+    GVS:SetScript('OnShow', function(self)
         local max = math.max(0, GetMerchantNumItems() - NUMROWS)
         scrollbar:SetMinMaxValues(0, max)
         scrollbar:SetValue(0)
         Refresh()
 
-        GVS:RegisterEvent("BAG_UPDATE")
-        GVS:RegisterEvent("MERCHANT_UPDATE")
-        GVS:RegisterEvent("MERCHANT_SHOW")
-        pcall(function() GVS:RegisterEvent("CURRENCY_DISPLAY_UPDATE") end)
+        GVS:RegisterEvent('BAG_UPDATE')
+        GVS:RegisterEvent('MERCHANT_UPDATE')
+        GVS:RegisterEvent('MERCHANT_SHOW')
+        pcall(function()
+            GVS:RegisterEvent('CURRENCY_DISPLAY_UPDATE')
+        end)
     end)
-    GVS:SetScript("OnHide", GVS.UnregisterAllEvents)
+    GVS:SetScript('OnHide', GVS.UnregisterAllEvents)
 
     return GVS
 end

@@ -6,17 +6,27 @@ local GARRISON_ICONS = {[1001489] = true, [1001490] = true, [1001491] = true}
 
 local function Knowable(link)
     local id = ns.ids[link]
-    if not id then return false end
-    if C_Heirloom and C_Heirloom.IsItemHeirloom(id) then return true end
+    if not id then
+        return false
+    end
+    if C_Heirloom and C_Heirloom.IsItemHeirloom(id) then
+        return true
+    end
 
     local _, _, _, _, _, class, _, _, _, texture = GetItemInfo(link)
-    if class == MISC and C_ToyBox and select(2, C_ToyBox.GetToyInfo(id)) then return true end
-    if class == RECIPE or GARRISON_ICONS[texture] then return true end
+    if class == MISC and C_ToyBox and select(2, C_ToyBox.GetToyInfo(id)) then
+        return true
+    end
+    if class == RECIPE or GARRISON_ICONS[texture] then
+        return true
+    end
 end
 
 local function RecipeNeedsRank(link)
     local _, _, _, _, _, class = GetItemInfo(link)
-    if class ~= RECIPE then return end
+    if class ~= RECIPE then
+        return
+    end
     return ns.unmet_requirements[link]
 end
 
@@ -47,7 +57,9 @@ function ns.GetRowGradient(index)
     end
 
     local link = GetMerchantItemLink(index)
-    if not (link and Knowable(link)) then return gradient, shown end
+    if not (link and Knowable(link)) then
+        return gradient, shown
+    end
 
     if ns.knowns[link] then
         return gradient, false
@@ -63,17 +75,21 @@ local QUALITY_COLORS = setmetatable({}, {
     __index = function(t, i)
         -- GetItemQualityColor only takes numbers, so fall back to white
         local _, _, _, hex = GetItemQualityColor(tonumber(i) or 1)
-        t[i] = "|c" .. hex
-        return "|c" .. hex
+        t[i] = '|c' .. hex
+        return '|c' .. hex
     end,
 })
 
 function ns.GetRowTextColor(index)
     local link = GetMerchantItemLink(index)
-    if not link then return QUALITY_COLORS.default end
+    if not link then
+        return QUALITY_COLORS.default
+    end
 
     -- Grey out if already known
-    if Knowable(link) and ns.knowns[link] then return QUALITY_COLORS[0] end
+    if Knowable(link) and ns.knowns[link] then
+        return QUALITY_COLORS[0]
+    end
 
     local _, _, quality = GetItemInfo(link)
     return QUALITY_COLORS[quality or 1]

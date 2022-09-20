@@ -14,20 +14,28 @@ function ns.OnLoad()
     local GVS = ns.NewMainFrame()
     GVS:SetWidth(315)
     GVS:SetHeight(294)
-    GVS:SetPoint("TOPLEFT", MerchantFrame, 8, -67)
+    GVS:SetPoint('TOPLEFT', MerchantFrame, 8, -67)
 
     -- Reanchor the buyback button, it acts weird when switching tabs otherwise...
     MerchantBuyBackItem:ClearAllPoints()
-    MerchantBuyBackItem:SetPoint("BOTTOMRIGHT", -7, 33)
+    MerchantBuyBackItem:SetPoint('BOTTOMRIGHT', -7, 33)
 
     -- The little class select dropdown show trigget a refresh
-    if SetMerchantFilter then hooksecurefunc("SetMerchantFilter", function() GVS:GetScript("OnShow")(GVS) end) end
+    if SetMerchantFilter then
+        hooksecurefunc('SetMerchantFilter', function()
+            GVS:GetScript('OnShow')(GVS)
+        end)
+    end
 
     -- Force show when we're loaded on demand and the tab is already selected
-    if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then GVS:Show() end
+    if MerchantFrame:IsVisible() and MerchantFrame.selectedTab == 1 then
+        GVS:Show()
+    end
 
     -- Reparent the first 10 MerchantItem frames, so they only appear for buyback
-    for i = 1, 10 do _G["MerchantItem" .. i]:SetParent(MerchantItem11) end
+    for i = 1, 10 do
+        _G['MerchantItem' .. i]:SetParent(MerchantItem11)
+    end
 
     -- Hide frames we don't need now
     Hide(MerchantNextPageButton)
@@ -35,5 +43,9 @@ function ns.OnLoad()
     Hide(MerchantPageText)
 
     -- Clean up our frame factories
-    for i, v in pairs(ns) do if i:match("^New") then ns[i] = nil end end
+    for i, v in pairs(ns) do
+        if i:match('^New') then
+            ns[i] = nil
+        end
+    end
 end

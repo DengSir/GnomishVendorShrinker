@@ -1,7 +1,7 @@
 local myname, ns = ...
 
-local tip = CreateFrame("GameTooltip")
-tip:SetOwner(WorldFrame, "ANCHOR_NONE")
+local tip = CreateFrame('GameTooltip')
+tip:SetOwner(WorldFrame, 'ANCHOR_NONE')
 
 ns.scantip = tip
 
@@ -39,22 +39,26 @@ tip.R = setmetatable({}, {
 -- Performes a "full" erase of the tooltip
 tip.Erase = function(self)
     self:ClearLines() -- Ensures tooltip's NumLines is reset
-    for i in pairs(self.L) do self.L[i] = nil end -- Flush the metatable cache
+    for i in pairs(self.L) do
+        self.L[i] = nil
+    end -- Flush the metatable cache
     for i in pairs(self.R) do
         self.rcache[i]:SetText() -- Clear text from right side (ClearLines only hides them)
         self.R[i] = nil -- Flush the metatable cache
     end
-    if not self:IsOwned(WorldFrame) then self:SetOwner(WorldFrame, "ANCHOR_NONE") end
+    if not self:IsOwned(WorldFrame) then
+        self:SetOwner(WorldFrame, 'ANCHOR_NONE')
+    end
 end
 
 -- Hooks the Set* methods to force a full erase beforehand
 local methods = {
-    "SetMerchantCostItem", "SetBagItem", "SetAction", "SetAuctionItem", "SetAuctionSellItem", "SetBuybackItem",
-    "SetCraftItem", "SetCraftSpell", "SetHyperlink", "SetInboxItem", "SetInventoryItem", "SetLootItem",
-    "SetLootRollItem", "SetMerchantItem", "SetPetAction", "SetPlayerBuff", "SetQuestItem", "SetQuestLogItem",
-    "SetQuestRewardSpell", "SetSendMailItem", "SetShapeshift", "SetSpell", "SetTalent", "SetTrackingSpell",
-    "SetTradePlayerItem", "SetTradeSkillItem", "SetTradeTargetItem", "SetTrainerService", "SetUnit", "SetUnitBuff",
-    "SetUnitDebuff",
+    'SetMerchantCostItem', 'SetBagItem', 'SetAction', 'SetAuctionItem', 'SetAuctionSellItem', 'SetBuybackItem',
+    'SetCraftItem', 'SetCraftSpell', 'SetHyperlink', 'SetInboxItem', 'SetInventoryItem', 'SetLootItem',
+    'SetLootRollItem', 'SetMerchantItem', 'SetPetAction', 'SetPlayerBuff', 'SetQuestItem', 'SetQuestLogItem',
+    'SetQuestRewardSpell', 'SetSendMailItem', 'SetShapeshift', 'SetSpell', 'SetTalent', 'SetTrackingSpell',
+    'SetTradePlayerItem', 'SetTradeSkillItem', 'SetTradeTargetItem', 'SetTrainerService', 'SetUnit', 'SetUnitBuff',
+    'SetUnitDebuff',
 }
 for _, m in pairs(methods) do
     local orig = tip[m]
