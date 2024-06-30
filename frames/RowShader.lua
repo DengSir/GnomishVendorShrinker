@@ -1,25 +1,13 @@
 local myname, ns = ...
 
 local RECIPE = GetItemClassInfo(LE_ITEM_CLASS_RECIPE)
-local MISC = GetItemClassInfo(LE_ITEM_CLASS_MISCELLANEOUS)
-local GARRISON_ICONS = {[1001489] = true, [1001490] = true, [1001491] = true}
 
 local function Knowable(link)
-    local id = ns.ids[link]
-    if not id then
-        return false
-    end
-    if C_Heirloom and C_Heirloom.IsItemHeirloom(id) then
-        return true
-    end
+    return LibStub('LibKnown-1.0'):IsKnownable(ns.ids[link])
+end
 
-    local _, _, _, _, _, class, _, _, _, texture = GetItemInfo(link)
-    if class == MISC and C_ToyBox and select(2, C_ToyBox.GetToyInfo(id)) then
-        return true
-    end
-    if class == RECIPE or GARRISON_ICONS[texture] then
-        return true
-    end
+local function IsKnown(link)
+    return LibStub('LibKnown-1.0'):IsKnown(ns.ids[link])
 end
 
 local function RecipeNeedsRank(link)
@@ -30,14 +18,14 @@ local function RecipeNeedsRank(link)
     return ns.unmet_requirements[link]
 end
 
-local DEFAULT_GRAD = {0, 1, 0, 0.75, 0, 1, 0, 0} -- green
+local DEFAULT_GRAD = {CreateColor(0, 1, 0, 0.75), CreateColor(0, 1, 0, 0)} -- green
 local GRADS = {
-    red = {1, 0, 0, 0.75, 1, 0, 0, 0},
-    [1] = {1, 1, 1, 0.75, 1, 1, 1, 0}, -- white
+    red = {CreateColor(1, 0, 0, 0.75), CreateColor(1, 0, 0, 0)},
+    [1] = {CreateColor(1, 1, 1, 0.75), CreateColor(1, 1, 1, 0)}, -- white
     [2] = DEFAULT_GRAD, -- green
-    [3] = {0.5, 0.5, 1, 1, 0, 0, 1, 0}, -- blue
-    [4] = {1, 0, 1, 0.75, 1, 0, 1, 0}, -- purple
-    [7] = {1, .75, .5, 0.75, 1, .75, .5, 0}, -- heirloom
+    [3] = {CreateColor(0.5, 0.5, 1, 1), CreateColor(0, 0, 1, 0)}, -- blue
+    [4] = {CreateColor(1, 0, 1, 0.75), CreateColor(1, 0, 1, 0)}, -- purple
+    [7] = {CreateColor(1, .75, .5, 0.75), CreateColor(1, .75, .5, 0)}, -- heirloom
 }
 GRADS = setmetatable(GRADS, {
     __index = function(t, i)
@@ -61,12 +49,15 @@ function ns.GetRowGradient(index)
         return gradient, shown
     end
 
-    if ns.knowns[link] then
+    print(link)
+
+    if IsKnown(link) then
         return gradient, false
-    elseif RecipeNeedsRank(link) then
-        return GRADS.red, true
+    -- elseif RecipeNeedsRank(link) then
+    --     return GRADS.red, true
     else
         local _, _, quality = GetItemInfo(link)
+        print(quality)
         return GRADS[quality], true
     end
 end
@@ -87,7 +78,7 @@ function ns.GetRowTextColor(index)
     end
 
     -- Grey out if already known
-    if Knowable(link) and ns.knowns[link] then
+    if Knowable(link) and IsKnown(link) then
         return QUALITY_COLORS[0]
     end
 

@@ -58,7 +58,15 @@ function ns.NewMainFrame()
             scrollbar:Increment()
         end
     end)
-    GVS:SetScript('OnEvent', Refresh)
+    GVS:SetScript('OnEvent', function(self, event, ...)
+        if event == 'MERCHANT_SHOW' then
+            scrollbar:SetValue(0)
+        elseif event == 'MERCHANT_UPDATE' or event == 'CURRENCY_DISPLAY_UPDATE' then
+            self.update = true
+        else
+            Refresh()
+        end
+    end)
     GVS:SetScript('OnShow', function(self)
         local max = math.max(0, GetMerchantNumItems() - NUMROWS)
         scrollbar:SetMinMaxValues(0, max)
@@ -71,6 +79,12 @@ function ns.NewMainFrame()
         pcall(function()
             GVS:RegisterEvent('CURRENCY_DISPLAY_UPDATE')
         end)
+    end)
+    GVS:SetScript('OnUpdate', function(self)
+        if self.update then
+            self.update = false
+            Refresh()
+        end
     end)
     GVS:SetScript('OnHide', GVS.UnregisterAllEvents)
 

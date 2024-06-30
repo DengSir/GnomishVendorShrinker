@@ -57,7 +57,7 @@ local function SetValue(self, i, j)
     icons[self]:SetTexture(texture)
     texts[self]:SetText(GetTextColor(price, (link or name)) .. price)
 
-    if ns.currencyIds[link or name] == Constants.CurrencyConsts.CLASSIC_HONOR_CURRENCY_ID then
+    if (link or name) and ns.currencyIds[link or name] == Constants.CurrencyConsts.CLASSIC_HONOR_CURRENCY_ID then
         icons[self]:SetTexCoord(0.03125, 0.59375, 0.03125, 0.59375)
     else
         icons[self]:SetTexCoord(0, 1, 0, 1)
